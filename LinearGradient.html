@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-Color Linear Gradient Generator with Stop and Degrees</title>
+    <meta name="description" content="https://github.com/ManolisMariakakis/lyrics-presentation?tab=GPL-3.0-1-ov-file#readme">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+            width: 80%;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .color-inputs {
+            margin-bottom: 20px;
+        }
+
+        .gradient-display {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b 50%, #86a8e7);
+        }
+
+        .code-output {
+            margin-top: 20px;
+        }
+
+        #css-code {
+            width: 100%;
+            height: 50px;
+            padding: 10px;
+            font-family: monospace;
+            resize: none;
+        }
+    </style>
+    <script>
+        function getQueryStringParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        window.onload = function () {
+            const color1 = getQueryStringParameter('color1');
+            if (color1) {
+                document.getElementById('color1').value = color1;
+            }
+            const color2 = getQueryStringParameter('color2');
+            if (color2) {
+                document.getElementById('color2').value = color2;
+            }
+            const color3 = getQueryStringParameter('color3');
+            if (color3) {
+                document.getElementById('color3').value = color3;
+            }
+            const stop = getQueryStringParameter('stop');
+            if (stop) {
+                document.getElementById('stop').value = stop;
+            }
+            const degrees = getQueryStringParameter('degrees');
+            if (degrees) {
+                document.getElementById('degrees').value = degrees;
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>3-Color Linear-Gradient Generator</h1>
+
+        <div class="color-inputs">
+            <label for="color1">Color 1:</label>
+            <input type="color" id="color1" value="#ff7e5f">
+
+            <label for="color2">Color 2:</label>
+            <input type="color" id="color2" value="#feb47b">
+
+            <label for="color3">Color 3:</label>
+            <input type="color" id="color3" value="#86a8e7">
+        </div>
+        <div class="color-inputs">
+            <label for="stop">Color 2 Stop (%):</label>
+            <input type="range" id="stop" min="0" max="100" value="50">
+
+            <label for="degrees">Degrees (0-360):</label>
+            <input type="number" id="degrees" min="0" max="360" value="90">
+        </div>
+
+        <div class="gradient-display" id="gradient-display"></div>
+
+        <div class="code-output">
+            <textarea id="css-code" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        const color1Input = document.getElementById('color1');
+        const color2Input = document.getElementById('color2');
+        const color3Input = document.getElementById('color3');
+        const stopInput = document.getElementById('stop');
+        const degreesInput = document.getElementById('degrees');
+        const gradientDisplay = document.getElementById('gradient-display');
+        const cssCodeOutput = document.getElementById('css-code');
+
+        function updateGradient() {
+            const color1 = color1Input.value;
+            const color2 = color2Input.value;
+            const color3 = color3Input.value;
+            const stop = stopInput.value;
+            const degrees = degreesInput.value;
+
+            const gradient = `linear-gradient(${degrees}deg, ${color1}, ${color2} ${stop}%, ${color3})`;
+
+            gradientDisplay.style.background = gradient;
+
+            cssCodeOutput.value = `background: ${gradient};`;
+        }
+
+        color1Input.addEventListener('input', updateGradient);
+        color2Input.addEventListener('input', updateGradient);
+        color3Input.addEventListener('input', updateGradient);
+        stopInput.addEventListener('input', updateGradient);
+        degreesInput.addEventListener('input', updateGradient);
+
+        updateGradient();
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dock - Images</title>
+    <meta name="description" content="https://github.com/ManolisMariakakis/obs-hymn?tab=GPL-3.0-1-ov-file">
+    <script src="lib/jquery.min.js"></script>
+    <script language="javascript">
+        var myArray = [];
+        $(document).ready(function () {
+
+            if (localStorage.getItem("Songanimation") === null) {
+                localStorage.setItem('Songanimation', JSON.stringify(["animate__zoomIn"]));
+            }
+            if (localStorage.getItem("Songcolors") === null) {
+                localStorage.setItem('Songcolors', JSON.stringify(["white", "#000000", "#2a4b86", "#4a76c6", "#8faadc", "50", "0"]));
+            }
+            if (localStorage.getItem("Songimage") === null) {
+                localStorage.setItem('Songimage', JSON.stringify(["000"]));
+            }
+            if (localStorage.getItem("Songfontsize") === null) {
+                localStorage.setItem('Songfontsize', JSON.stringify([4, 5]));
+            }
+        })
+    </script>
+    <style>
+        body {
+            background-color: black;
+        }
+    </style>
+
+</head>
+
+<body>
+    <img class="clickable" no="001" src="images/img001.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="002" src="images/img002.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="003" src="images/img003.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="004" src="images/img004.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="005" src="images/img005.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="006" src="images/img006.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="007" src="images/img007.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="008" src="images/img008.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="009" src="images/img009.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="010" src="images/img010.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="011" src="images/img011.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="012" src="images/img012.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="013" src="images/img013.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="014" src="images/img014.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="015" src="images/img015.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="016" src="images/img016.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="017" src="images/img017.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="018" src="images/img018.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="019" src="images/img019.jpg" style="width:50px;height:50px;cursor:pointer;">
+    <img class="clickable" no="020" src="images/img020.jpg" style="width:50px;height:50px;cursor:pointer;">
+
+    <script>
+        $(document).ready(function () {
+            $(".clickable").click(function () {
+                var imgNo = $(this).attr("no");
+                let data = [imgNo];
+                crossImageGalley(imgNo);
+            });
+            var crossImageGalley = function (ctl) {
+                code = ctl;
+                const broadcastChannel = new BroadcastChannel('crossImageGallery');
+                broadcastChannel.postMessage({ bimage: code });
+                return false;
+            }
+        });
+    </script>
+</body>
+
+</html>

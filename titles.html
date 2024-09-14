@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dock - Titles</title>
+        <meta name="description" content="https://github.com/ManolisMariakakis/obs-hymn?tab=GPL-3.0-1-ov-file">
+        <style>
+                a {
+                        text-decoration: none;
+                        color: #ffffff;
+                        font-family: Arial, sans-serif;
+                        font-size: 13px;
+                }
+
+                ul {
+                        list-style-type: none;
+                }
+
+                li {
+                        margin: 1px;
+                        background-color: #404040;
+                }
+
+                li:hover {
+                        cursor: pointer;
+                }
+        </style>
+        <script src="lib/jquery.min.js"></script>
+        <script language="javascript">
+                var myArray = [];
+                $(document).ready(function () {
+
+                        if (localStorage.getItem("Songanimation") === null) {
+                                localStorage.setItem('Songanimation', JSON.stringify(["animate__zoomIn"]));
+                        }
+                        if (localStorage.getItem("Songcolors") === null) {
+                                localStorage.setItem('Songcolors', JSON.stringify(["white", "#000000", "#2a4b86", "#4a76c6", "#8faadc","50","0"]));
+                        }
+                        if (localStorage.getItem("Songimage") === null) {
+                                localStorage.setItem('Songimage', JSON.stringify(["000"]));
+                        }
+                        if (localStorage.getItem("Songfontsize") === null) {
+                                localStorage.setItem('Songfontsize', JSON.stringify([4, 5]));
+                        }
+
+                        var xhr0 = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+                        xhr0.open('get', 'data//titles.txt?dc=' + (new Date()).getTime(), false);
+                        xhr0.onreadystatechange = function () {
+                                if (xhr0.readyState == 4 && xhr0.status == 200) {
+                                        var text_input;
+                                        text_input = xhr0.responseText;
+                                        var ks = text_input.split(/\r\n|\n|\r/);
+                                        $.each(ks, function (k) {
+                                                if (ks[k] != "") {
+                                                        var ul = document.getElementById("itemList");
+                                                        var li = document.createElement("li");
+                                                        var a = document.createElement("a");
+                                                        a.textContent = ks[k];
+                                                        var hymn = ks[k].substring(0, 3) + '.txt'
+                                                        li.setAttribute("onclick", "JavaScript:return crossWindow('" + hymn + "');");
+                                                        a.setAttribute("href", "#");
+                                                        a.setAttribute("target", "right");
+                                                        ul.appendChild(li);
+
+                                                        var btn = document.createElement("button");
+                                                        btn.innerHTML = ("+");
+                                                        var spn = document.createElement("span");
+                                                        spn.innerHTML = ("&nbsp;");
+                                                        btn.setAttribute("onclick", "JavaScript:return crossHistory('" + ks[k].replace(/'/g, "") + "');");
+                                                        btn.setAttribute("style", "cursor:pointer;marging-right:3px;");
+                                                        li.appendChild(btn);
+                                                        li.appendChild(spn);
+                                                        li.appendChild(a);
+                                                }
+                                        });
+                                }
+                        }
+                        xhr0.send();
+
+                        $('ul li').click(function (e) {
+                                $("li").css("background-color", "#404040");
+                                $(this).css('background-color', '#2A4B86');
+                        });
+
+
+                        document.getElementById('searchInput').addEventListener('input', function (event) {
+                                const searchTerm = event.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                                const listItems = document.querySelectorAll('#itemList li');
+
+                                listItems.forEach(function (item) {
+                                        const itemText = item.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+                                        if (itemText.includes(searchTerm)) {
+                                                item.style.display = 'list-item';
+                                        } else {
+                                                item.style.display = 'none';
+                                        }
+                                });
+                        });
+                });
+
+                var crossWindow = function (ctl) {
+
+                        code = ctl;
+                        const broadcastChannel = new BroadcastChannel('crossSong');
+                        broadcastChannel.postMessage({ code: code });
+                        return false;
+                }
+
+
+                var crossHistory = function (ctl) {
+
+                        let arr = JSON.parse(localStorage.getItem('Songcolors'));
+                        let ani = JSON.parse(localStorage.getItem('Songanimation'));
+                        let bimg = JSON.parse(localStorage.getItem('Songimage'));
+                        let fnt = JSON.parse(localStorage.getItem('Songfontsize'));
+                        code = ctl;
+                        const broadcastChannel = new BroadcastChannel('crossHistory');
+                        broadcastChannel.postMessage({ code: code, color0: arr[0], shadow: arr[1], color1: arr[2], color2: arr[3], color3: arr[4], stop: arr[5], degrees: arr[6], animation: ani[0], bimage: bimg[0], fontsize: fnt[0], lineheight: fnt[1] });
+                        return false;
+                }
+
+
+
+
+        </script>
+</head>
+
+<body>
+        <input style="width:90%;" type="text" id="searchInput" placeholder="Find...">
+        <ul id="itemList" style="margin: 0;padding: 0;">
+        </ul>
+</body>
+
+</html>

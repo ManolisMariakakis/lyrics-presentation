@@ -1,0 +1,11 @@
+#Title;Text color;Shadow color;Color1;Color2;Color3;Stop;Degrees
+W_Dark blue;#ffffff;#000000;#2a4b86;#4a76c6;#8faadc;50;0
+W_Brown;#ffffff;#000000;#c4bd97;#948a54;#4a452a;50;0
+W_Turquoise;#ffffff;#000000;#00b0f0;#0070c0;#002060;50;0
+W_Dark grey;#ffffff;#000000;#7f7f7f;#595959;#404040;50;0
+W_Indian red;#ffffff;#000000;#ac5e4f;#956352;#956352;50;0
+W_Near east;#ffffff;#000000;#ffffff;#274060;#ffffff;50;0
+B_Grey;#000000;#003366;#a6a6a6;#bfbfbf;#d9d9d9;50;0
+W_Gradient;#ffffff;#000000;#2a4b85;#4a76c6;#8faadc;40;180
+B_Transparent;#000000;#003366;rgba(255,255,255,0);rgba(255,255,255,0);rgba(255,255,255,0);50;0
+W_Transparent;#ffffff;#000000;rgba(255,255,254,0);rgba(255,255,254,0);rgba(255,255,254,0);50;0

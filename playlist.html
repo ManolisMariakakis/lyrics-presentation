@@ -1,0 +1,185 @@
+<HTML>
+
+<HEAD>
+    <TITLE>Dock | Playlist</TITLE>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="https://github.com/ManolisMariakakis/obs-hymn?tab=GPL-3.0-1-ov-file">
+    <style>
+        * {
+            font-family: Arial, Helvetica, Geneva, sans-serif;
+            /*BACKGROUND-COLOR: #f2f2f2;*/
+            font-size: 12px;
+        }
+
+        .n1 {
+            font-size: 56px;
+            color: #000000;
+            FONT-WEIGHT: bold;
+            BACKGROUND-COLOR: #f2f2f2;
+            PADDING-LEFT: 20px;
+        }
+
+        .cssmenu {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 5px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+
+        td {
+            line-height: 18px
+        }
+
+        td,
+        th {
+            border: 1px solid #ddd;
+            padding: 4px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        tr {
+            border: 1px solid black;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        tr:nth-child(even) {
+            background-color: #eee;
+        }
+    </style>
+
+</HEAD>
+
+<BODY>
+
+    <div class="cssmenu">&nbsp;</div>
+    <table id="myTable" style="margin-top:30px;border-collapse: collapse;">
+        <thead>
+            <tr>
+                <td><strong>#</strong></td>
+                <td><strong>Playlist</strong></td>
+                <td><strong>Style</strong></td>
+                <td><a href="javascript:clearTable();"><img src="deleteAll.png" style="width:16px;height:auto;"></a>
+                </td>
+            </tr>
+            <thead>
+            <tbody id="root">
+
+        <tbody>
+    </table>
+
+
+    <script>
+
+        (function (d) {
+
+            if (localStorage.getItem("Songanimation") === null) {
+                localStorage.setItem('Songanimation', JSON.stringify(["animate__zoomIn"]));
+            }
+            if (localStorage.getItem("Songcolors") === null) {
+                localStorage.setItem('Songcolors', JSON.stringify(["white", "#000000", "#2a4b86", "#4a76c6", "#8faadc","50","0"]));
+            }
+            if (localStorage.getItem("Songimage") === null) {
+                localStorage.setItem('Songimage', JSON.stringify(["000"]));
+            }
+            if (localStorage.getItem("Songfontsize") === null) {
+                localStorage.setItem('Songfontsize', JSON.stringify([4, 5]));
+            }
+
+            const broadcastChannel_5 = new BroadcastChannel('crossHistory');
+            broadcastChannel_5.onmessage = function (event) {
+                var code = [event.data.code, event.data.color0, event.data.shadow, event.data.color1, event.data.color2, event.data.color3, event.data.stop, event.data.degrees, event.data.animation, event.data.bimage, event.data.fontsize, event.data.lineheight].join("@");
+                manageData(code);
+            }
+
+        })(document);           
+    </script>
+    <script>
+        let id = "no";
+        selectData();
+        function manageData(code) {
+            let name = code;
+
+            if (id == 'no') {
+                let arr = getCrudData();
+                if (arr == null) {
+                    let data = [name];
+                    setCrudData(data);
+                } else {
+                    arr.push(name);
+                    setCrudData(arr);
+                }
+            } else {
+                let arr = getCrudData();
+                arr[id] = name;
+                setCrudData(arr);
+            }
+            selectData();
+        }
+
+        function selectData() {
+            let arr = getCrudData();
+            if (arr != null) {
+                let html = '';
+                let sno = 1;
+                for (let k in arr) {
+                    const a1 = arr[k].split('@');
+                    //a1[6]=a1[6].replace(/animate__/g, '');
+                    if (a1[7] == "000") {
+                        html = html + `<tr><td>${sno}</td><td>${a1[0]}</td><td style="width:100px;height:50px;color:${a1[1]}; text-shadow:${a1[2]} 0px 1px 3px;text-align:left;background: linear-gradient(${a1[7]}deg,${a1[5]} 0%, ${a1[4]} ${a1[6]}%, ${a1[3]} 100%);">${a1[8]}<br>image__${a1[9]}</td><td style="text-align:center;"><a href="javascript:void(0)" onclick="deleteData(${k})"><img src="delete.png" style="width:16px;height:auto;"></a></td></tr>`;
+                    } else {
+                        html = html + `<tr><td>${sno}</td><td>${a1[0]}</td><td style="width:100px;height:50px;color:${a1[1]}; text-shadow:${a1[2]} 0px 1px 3px;text-align:left;background-blend-mode: overlay;background-image: url(images/img${a1[9]}.jpg), linear-gradient(${a1[7]}deg,${a1[5]} 0%, ${a1[4]} ${a1[6]}%, ${a1[3]} 100%);">${a1[8]}<br>image__${a1[9]}</td><td style="text-align:center;"><a href="javascript:void(0)" onclick="deleteData(${k})"><img src="delete.png" style="width:16px;height:auto;"></a></td></tr>`;
+                    }
+                    sno++;
+                }
+                document.getElementById('root').innerHTML = html;
+
+            }
+        }
+
+        function editData(rid) {
+            id = rid;
+            let arr = getCrudData();
+            document.getElementById('name').value = arr[rid];
+        }
+
+        function deleteData(rid) {
+            let arr = getCrudData();
+            arr.splice(rid, 1);
+            setCrudData(arr);
+            selectData();
+        }
+
+        function getCrudData() {
+            let arr = JSON.parse(localStorage.getItem('Songcrud'));
+            return arr;
+        }
+
+        function setCrudData(arr) {
+            localStorage.setItem('Songcrud', JSON.stringify(arr));
+        }
+
+        function clearTable() {
+            var x = document.getElementById("myTable").rows.length;
+            for (var i = x - 1; i >= 0; i--) {
+                deleteData(i);
+            }
+            selectData();
+        }
+    </script>
+</BODY>
+
+</HTML>

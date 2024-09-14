@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Browser source - Slides</title>
+    <meta name="description" content="https://github.com/ManolisMariakakis/obs-hymn?tab=GPL-3.0-1-ov-file">
+    <link rel="stylesheet" type='text/css' media='all' href="lib/webslides.css">
+    <link rel="stylesheet" href="lib/animate.min.css" />
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/webslides.js"></script>
+</head>
+
+<body>
+    <span id="mySlides"></span>
+    <script>
+        (function (d) {
+
+            if (localStorage.getItem("Songanimation") === null) {
+                localStorage.setItem('Songanimation', JSON.stringify(["animate__zoomIn"]));
+            }
+            if (localStorage.getItem("Songcolors") === null) {
+                localStorage.setItem('Songcolors', JSON.stringify(["white", "#000000", "#2a4b86", "#4a76c6", "#8faadc","50","0"]));
+            }
+            if (localStorage.getItem("Songimage") === null) {
+                localStorage.setItem('Songimage', JSON.stringify(["000"]));
+            }
+            if (localStorage.getItem("Songfontsize") === null) {
+                localStorage.setItem('Songfontsize', JSON.stringify([4, 5]));
+            }
+
+            let ani = JSON.parse(localStorage.getItem('Songanimation'));
+            var animation = ani[0];
+            let bimg = JSON.parse(localStorage.getItem('Songimage'));
+            var bimage = bimg[0];
+            var url = new URL(window.location.href);
+            if (url.searchParams.has('song')) {
+
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                const code = urlParams.get('song');
+
+                let fontarr = JSON.parse(localStorage.getItem('Songfontsize'));
+
+                let colorarr = JSON.parse(localStorage.getItem('Songcolors'));
+                var color0 = colorarr[0];
+                var shadow = colorarr[1];
+                var color1 = colorarr[2];
+                var color2 = colorarr[3];
+                var color3 = colorarr[4];
+                var stop = colorarr[5];
+                var degrees = colorarr[6];
+                if (bimage == "000") {
+                    $(`<style type='text/css'>.fr-param{font-size:${fontarr[0]}rem;line-height:${fontarr[1]}rem;color: ${color0}; text-shadow: ${shadow} 0px 1px 3px;} .bg-param{background: linear-gradient(${degrees}deg, ${color3} 0%, ${color2} ${stop}%, ${color1} 100%);} .bg-black{background: linear-gradient(0deg, black 0%, black 50%, black 100%);} </style>`).appendTo("head");
+                } else {
+                    $(`<style type='text/css'>.fr-param{font-size:${fontarr[0]}rem;line-height:${fontarr[1]}rem;color: ${color0}; text-shadow: ${shadow} 0px 1px 3px;} .bg-param{background-blend-mode: overlay;background-image: url("images/img${bimage}.jpg"), linear-gradient(${degrees}deg, ${color3} 0%, ${color2} ${stop}%, ${color1} 100%);} .bg-black{background: linear-gradient(0deg, black 0%, black 50%, black 100%);} </style>`).appendTo("head");
+                }
+                var myArray = [];
+                var myAnimation = [];
+                if (code == "000.txt") {
+                    let arr = JSON.parse(localStorage.getItem('Songcrud'));
+                    arr.map((item, index) => {
+                        return myArray.push(item.substring(0, 3));
+                    });
+                    arr.map((item, index) => {
+                        return myAnimation.push(item.split("@")[6]);
+                    });
+                    for (i = 0; i < arr.length; i++) {
+                        const a1 = arr[i].split('@');
+                        var no = a1[0].substring(0, 3);
+                        if (a1[7] == "000") {
+                            $(`<style type='text/css'>.fr-param${no}{font-size:${a1[10]}rem;line-height:${a1[11]}rem;color: ${a1[1]}; text-shadow: ${a1[2]} 0px 1px 3px;} .bg-param${no}{background: linear-gradient(${a1[7]}deg, ${a1[5]} 0%, ${a1[4]} ${a1[6]}%, ${a1[3]} 100%);}</style>`).appendTo("head");
+                        } else {
+                            $(`<style type='text/css'>.fr-param${no}{font-size:${a1[10]}rem;line-height:${a1[11]}rem;color: ${a1[1]}; text-shadow: ${a1[2]} 0px 1px 3px;} .bg-param${no}{background-blend-mode: overlay;background-image: url("images/img${a1[9]}.jpg"), linear-gradient(${a1[7]}deg, ${a1[5]} 0%, ${a1[4]} ${a1[6]}%, ${a1[3]} 100%);}</style>`).appendTo("head");
+                        }
+                    }
+
+                } else {
+                    myArray = code.replace(/.txt/, '').split(",");
+                }
+                var output_html = "<article id=\"webslides\">";
+                var c = 0;
+                for (i = 0; i < myArray.length; i++) {
+                    var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+                    xhr.open('get', 'data//' + myArray[i] + ".txt", false);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+
+                            var text_input;
+                            text_input = xhr.responseText;
+
+                            c++;
+                            output_html += `<section class="bg-black" id="slide1"><div class="aligncenter"></div></section>`;
+
+                            var ks = text_input.split(/\r\n|\n|\r/);
+                            var stixos = "";
+                            var no = "";
+                            if (code == "000.txt") {
+                                no = myArray[i];
+                                animation = myAnimation[i];
+                            };
+                            $.each(ks, function (k) {
+                                if (ks[k] === "") {
+                                    c++;
+                                    output_html += `<section class="bg-param${no}" id="slide${c}"><div class="aligncenter ${animation}"><span class="fr-param${no}">${stixos}</span></div></section>`;
+                                    stixos = "";
+                                } else {
+                                    stixos += (stixos == "") ? ks[k] : "<br>" + ks[k]
+                                }
+                            });
+                            if (stixos != "") {
+                                c++;
+                                output_html += `<section class="bg-param${no}" id="slide${c}"><div class="aligncenter ${animation}"><span class="fr-param${no}">${stixos}</span></div></section>`;
+                            }
+
+
+                        }
+                    }
+                    xhr.send();
+
+                }
+                output_html = output_html + "</article>";
+                document.getElementById("mySlides").innerHTML = output_html;
+                window.ws = new WebSlides();
+            }
+
+            const broadcastSlide = new BroadcastChannel('crossSlide');
+            broadcastSlide.onmessage = function (event) {
+                var slide = event.data.slide - 1;
+                ws.goToSlide(slide);
+            }
+
+            const broadcastAnimation = new BroadcastChannel('crossAnimation');
+            broadcastAnimation.onmessage = function (event) {
+
+                var url = new URL(window.location.href);
+                if (url.searchParams.has('song')) {
+                    const queryString = window.location.search;
+                    const urlParams = new URLSearchParams(queryString);
+                    const code = urlParams.get('song');
+                    if (code != "000.txt") {
+                        var animation = event.data.animation;
+                        $("section > div").removeClass(function (index, css) {
+                            return (css.match(/\banimate\S+/g) || []).join(' ');
+                        });
+                        $("section > div").addClass(animation);
+                    }
+                }
+            }
+
+
+
+            const broadcastColors = new BroadcastChannel('crossColors');
+            broadcastColors.onmessage = function (event) {
+                $(".fr-param").css("color", event.data.color0);
+                $(".fr-param").css("text-shadow", event.data.shadow + " 0px 1px 3px");
+
+                let bimage = JSON.parse(localStorage.getItem('Songimage'));
+                if (bimage[0] == "000") {
+                    $(".bg-param").css("background-blend-mode", "");
+                    $(".bg-param").css("background-image", "");
+                    $(".bg-param").css("background", "linear-gradient(0deg, " + event.data.color3 + " " + event.data.degrees + "%, " + event.data.color2 + " " + event.data.stop + "%, " + event.data.color1 + " 100%)");
+                } else {
+                    $(".bg-param").css("background", "");
+                    $(".bg-param").css("background-blend-mode", "overlay");
+                    $(".bg-param").css("background-image", "url(\"images/img" + bimage + ".jpg\"), linear-gradient(" + event.data.degrees + "deg, " + event.data.color3 + " " + event.data.stop + "%, " + event.data.color2 + " 50%, " + event.data.color1 + " 100%)");
+                };
+            }
+
+            const broadcastFont = new BroadcastChannel('crossFontsize');
+            broadcastFont.onmessage = function (event) {
+                $(".fr-param").css("font-size", event.data.fontsize + "rem");
+                $(".fr-param").css("line-height", event.data.lineheight + "rem");
+            }
+            
+
+
+            const broadcastImage = new BroadcastChannel('crossImage');
+            broadcastImage.onmessage = function (event) {
+                let colorarr = JSON.parse(localStorage.getItem('Songcolors'));
+                var color0 = colorarr[0];
+                var shadow = colorarr[1];
+                var color1 = colorarr[2];
+                var color2 = colorarr[3];
+                var color3 = colorarr[4];
+                var stop = colorarr[5];
+                var degrees = colorarr[6];
+                var bimage = event.data.bimage;
+                if (bimage == "000") {
+                    $(".bg-param").css("background-blend-mode", "");
+                    $(".bg-param").css("background-image", "");
+                    $(".bg-param").css("background", "linear-gradient(" + degrees + "deg, " + color3 + " 0%, " + color2 + " " + stop + "%, " + color1 + " 100%)");
+                } else {
+                    $(".bg-param").css("background", "");
+                    $(".bg-param").css("background-blend-mode", "overlay");
+                    $(".bg-param").css("background-image", "url(\"images/img" + bimage + ".jpg\"), linear-gradient(" + degrees + "deg, " + color3 + " 0%, " + color2 + " " + stop + "%, " + color1 + " 100%)");
+                };
+            }
+
+
+
+
+            const broadcastChannel = new BroadcastChannel('crossSong');
+            broadcastChannel.onmessage = function (event) {
+                window.location.href = location.pathname + "?song=" + event.data.code;
+            };
+        })(document);
+
+    </script>
+
+
+</body>
+
+</html>

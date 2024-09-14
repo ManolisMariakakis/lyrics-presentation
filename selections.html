@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dock - Selections</title>
+        <meta name="description" content="https://github.com/ManolisMariakakis/obs-hymn?tab=GPL-3.0-1-ov-file">
+        <script src="lib/jquery.min.js"></script>
+        <script language="javascript">
+                var myArray = [];
+                $(document).ready(function () {
+
+                        if (localStorage.getItem("Songanimation") === null) {
+                                localStorage.setItem('Songanimation', JSON.stringify(["animate__zoomIn"]));
+                        }
+                        if (localStorage.getItem("Songcolors") === null) {
+                                localStorage.setItem('Songcolors', JSON.stringify(["white", "#000000", "#2a4b86", "#4a76c6", "#8faadc", "50", "0"]));
+                        }
+                        if (localStorage.getItem("Songimage") === null) {
+                                localStorage.setItem('Songimage', JSON.stringify(["000"]));
+                        }
+                        if (localStorage.getItem("Songfontsize") === null) {
+                                localStorage.setItem('Songfontsize', JSON.stringify([4, 5]));
+                        }
+                        let fntarr = JSON.parse(localStorage.getItem('Songfontsize'));
+                        $("#fntsize").text(Number(fntarr[0]).toFixed(1));
+
+                        var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+                        xhr.open('get', 'data//colors.txt?dc=' + (new Date()).getTime(), false);
+                        xhr.onreadystatechange = function () {
+                                if (xhr.readyState == 4 && xhr.status == 200) {
+                                        var text_input;
+                                        text_input = xhr.responseText;
+                                        var ks = text_input.split(/\r\n|\n|\r/);
+                                        $.each(ks, function (k) {
+                                                if (ks[k].substring(0, 1) != "#") {
+                                                        var myItem = [];
+                                                        myItem = ks[k].split(";");
+                                                        if (myItem.length == 8) {
+                                                                myArray.push(myItem);
+                                                                var select = document.getElementById("color");
+                                                                var opt = document.createElement('option');
+                                                                opt.value = myItem[3];
+                                                                opt.innerHTML = '&#9724; ' + myItem[0];
+                                                                opt.setAttribute('style', 'color:black;');
+                                                                select.appendChild(opt);
+                                                        }
+                                                }
+                                        });
+                                }
+                        }
+                        xhr.send();
+
+                        $('#color').on('change', function (e) {
+                                var optionSelected = $("option:selected", this);
+                                var val = this.value;
+                                $.each(myArray, function (i) {
+                                        if (val == myArray[i][3]) {
+                                                let colorarr = [myArray[i][1], myArray[i][2], myArray[i][3], myArray[i][4], myArray[i][5], myArray[i][6], myArray[i][7]];
+                                                localStorage.setItem('Songcolors', JSON.stringify(colorarr));
+                                                crossColors(colorarr);
+                                        };
+                                });
+
+                        });
+
+                        $('#animation').on('change', function (e) {
+                                var optionSelected = $("option:selected", this);
+                                var name = this.value;
+                                let data = [name];
+                                localStorage.setItem('Songanimation', JSON.stringify(data));
+                                crossAnimation(name);
+                        });
+
+                        let ani = JSON.parse(localStorage.getItem('Songanimation'));
+                        var animation = ani[0];
+                        if (animation == null) {
+                                animation = "animate__fadeIn";
+                        }
+                        $("select[name='animation']").val(animation);
+
+                        let colorarr = JSON.parse(localStorage.getItem('Songcolors'));
+                        var color1 = colorarr[2];
+                        if (color1 == null) {
+                                color1 = myArray[0][3];
+                        }
+                        $("select[name='color']").val(color1);
+
+
+
+
+
+                        $('#bimage').on('change', function (e) {
+                                var optionSelected = $("option:selected", this);
+                                var name = this.value;
+                                let data = [name];
+                                localStorage.setItem('Songimage', JSON.stringify(data));
+                                crossImage(name);
+                        });
+
+                        let bimg = JSON.parse(localStorage.getItem('Songimage'));
+                        var bimage = bimg[0];
+                        if (bimage == null) {
+                                bimage = "000";
+                        }
+                        $("select[name='bimage']").val(bimage);
+
+
+
+                });
+
+                var crossWindow = function (ctl) {
+
+                        code = ctl;
+                        const broadcastChannel = new BroadcastChannel('crossSong');
+                        broadcastChannel.postMessage({ code: code });
+                        return false;
+                }
+
+
+                var crossHistory = function (ctl) {
+                        code = ctl;
+                        const broadcastChannel = new BroadcastChannel('crossHistory');
+                        broadcastChannel.postMessage({ code: code });
+                        return false;
+                }
+                var crossFontsize = function (ctl) {
+                        let fnt = JSON.parse(localStorage.getItem('Songfontsize'));
+                        if (ctl == "+") {
+                                var fontsize = parseFloat(fnt[0]) + 0.5;
+                                var lineheight = parseFloat(fnt[1]) + 0.5;
+                        } else {
+                                var fontsize = parseFloat(fnt[0]) - 0.5;
+                                var lineheight = parseFloat(fnt[1]) - 0.5;
+                        }
+
+                        localStorage.setItem('Songfontsize', JSON.stringify([fontsize, lineheight]));
+
+                        $("#fntsize").text(Number(fontsize).toFixed(1));
+
+                        const broadcastChannel = new BroadcastChannel('crossFontsize');
+                        broadcastChannel.postMessage({ fontsize: fontsize, lineheight: lineheight });
+                        return false;
+                }
+                var crossAnimation = function (ctl) {
+                        code = ctl;
+                        const broadcastChannel = new BroadcastChannel('crossAnimation');
+                        broadcastChannel.postMessage({ animation: code });
+                        return false;
+                }
+
+                var crossImage = function (ctl) {
+                        code = ctl;
+                        const broadcastChannel = new BroadcastChannel('crossImage');
+                        broadcastChannel.postMessage({ bimage: code });
+                        return false;
+                }
+
+                var crossColors = function (arr) {
+                        const broadcastChannel = new BroadcastChannel('crossColors');
+                        broadcastChannel.postMessage({ color0: arr[0], shadow: arr[1], color1: arr[2], color2: arr[3], color3: arr[4], stop: arr[5], degrees: arr[6] });
+                        return false;
+                }
+
+                const broadcastImageGallery = new BroadcastChannel('crossImageGallery');
+                broadcastImageGallery.onmessage = function (event) {
+                        var bimage = event.data.bimage;
+                        let data = [bimage];
+                        localStorage.setItem('Songimage', JSON.stringify(data));
+                        $("select[name='bimage']").val(bimage);
+                        crossImage(bimage);
+                }
+
+        </script>
+</head>
+
+<body>
+        <select name="color" class="form-control" id="color">
+        </select>
+        <select name="animation" class="form-control" id="animation">
+                <option value="animate__fadeIn">fadeIn</option>
+                <option value="animate__fadeInDown">fadeInDown</option>
+                <option value="animate__fadeInLeft">fadeInLeft</option>
+                <option value="animate__fadeInRight">fadeInRight</option>
+                <option value="animate__fadeInRight">fadeInRight</option>
+                <option value="animate__fadeInUp">fadeInUp</option>
+                <option value="animate__fadeInTopLeft">fadeInTopLeft</option>
+                <option value="animate__fadeInTopRight">fadeInTopRight</option>
+                <option value="animate__fadeInBottomLeft">fadeInBottomLeft</option>
+                <option value="animate__fadeInBottomRight">fadeInBottomRight</option>
+                <option value="animate__flipInX">flipInX</option>
+                <option value="animate__jackInTheBox">jackInTheBox</option>
+                <option value="animate__rollIn">rollIn</option>
+                <option value="animate__zoomIn">zoomIn</option>
+                <option value="animate__zoomInDown">zoomInDown</option>
+                <option value="animate__zoomInLeft">zoomInLeft</option>
+                <option value="animate__zoomInRight">zoomInRight</option>
+                <option value="animate__zoomInUp">zoomInUp</option>
+                <option value="animate__slideInDown">slideInDown</option>
+                <option value="animate__slideInLeft">slideInLeft</option>
+                <option value="animate__slideInRight">slideInRight</option>
+                <option value="animate__slideInUp">slideInUp</option>
+        </select>
+        <select name="bimage" class="form-control" id="bimage">
+                <option value="000">Without image</option>
+                <option value="001">Image 001</option>
+                <option value="002">Image 002</option>
+                <option value="003">Image 003</option>
+                <option value="004">Image 004</option>
+                <option value="005">Image 005</option>
+                <option value="006">Image 006</option>
+                <option value="007">Image 007</option>
+                <option value="008">Image 008</option>
+                <option value="009">Image 009</option>
+                <option value="010">Image 010</option>
+                <option value="011">Image 011</option>
+                <option value="012">Image 012</option>
+                <option value="013">Image 013</option>
+                <option value="014">Image 014</option>
+                <option value="015">Image 015</option>
+                <option value="016">Image 016</option>
+                <option value="017">Image 017</option>
+                <option value="018">Image 018</option>
+                <option value="019">Image 019</option>
+                <option value="020">Image 020</option>
+        </select>
+        <span id="fntsize" style="font-family: Arial, sans-serif;font-size:14px;">9.5</span>
+        <button onclick="JavaScript:return crossFontsize('+');" style="cursor:pointer;margin-right:3px;">+</button>
+        <button onclick="JavaScript:return crossFontsize('-');" style="cursor:pointer;margin-right:3px;">-</button>
+</body>
+
+</html>
