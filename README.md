@@ -154,12 +154,12 @@ The result is as in the image below (with the help of dock layouts plugin <a hre
 
 ### Training on the online sample
 
-- https://manolis.eu/lyrics/titles.html
-- https://manolis.eu/lyrics/selections.html
-- https://manolis.eu/lyrics/lyrics.html
-- https://manolis.eu/lyrics/playlist.html
-- https://manolis.eu/lyrics/images.html
-- https://manolis.eu/lyrics/webslides.html
+- https://ymnoi.gr/lyrics/titles.html
+- https://ymnoi.gr/lyrics/selections.html
+- https://ymnoi.gr/lyrics/lyrics.html
+- https://ymnoi.gr/lyrics/playlist.html
+- https://ymnoi.gr/lyrics/images.html
+- https://ymnoi.gr/lyrics/webslides.html
 
 1. Add the first 4 pages (titles, selections, lyrics, playlist) as dock page via the menu Docs > Custome Browser Docs
 2. Add the 5th page (webslides) as Browser source (width=800, height=600)
