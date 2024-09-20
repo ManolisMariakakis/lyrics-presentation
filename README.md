@@ -141,9 +141,9 @@ http://localhost/lyrics/lyrics.html
 3. Slide display options, animation, background color, foreground color, background image, font size<br>
 http://localhost/lyrics/selections.html
 4. The hymn playlist<br>
-http://localhost/lyrics/images.html
-5. The Images selection from thumbnail gallery<br>
 http://localhost/lyrics/playlist.html
+5. The Images selection from thumbnail gallery<br>
+http://localhost/lyrics/images.html
 6. The browser source<br>
 http://localhost/lyrics/webslides.html
 
